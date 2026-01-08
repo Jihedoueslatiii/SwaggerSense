@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-29T21:28:22.017783",
+    "base_url": "http://localhost:8089/api",
+    "tool_version": "3.0 - Auto-Fetching & Auto-Generating Tests",
+    "test_type": "Auto-Generated Tests Based on Actual JSON Data"
+  },
+  "summary": {
+    "total_tests": 0,
+    "passed": 0,
+    "failed": 0,
+    "critical_issues": 0,
+    "high_issues": 0
+  },
+  "results": []
+}

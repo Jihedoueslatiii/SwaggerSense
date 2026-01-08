@@ -1,0 +1,7 @@
+beautifulsoup4
+lxml
+pandas
+flask_cors
+requests
+tqdm
+google-generativeai

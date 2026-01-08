@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwaggerSense API Tester | AI-Powered Testing Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --dark-lighter: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark-light) 100%);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .config-section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--dark-lighter);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 280px;
+            padding: 24px;
+        }
+        
+        /* HEADER BAR */
+        .header-bar {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .page-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .stat-card.endpoints .stat-icon {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+        
+        .stat-card.passed .stat-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .stat-card.failed .stat-icon {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+        
+        .stat-card.critical .stat-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        
+        /* CONTENT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .card-title i {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* ENDPOINTS LIST */
+        .endpoints-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .endpoints-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .endpoints-container::-webkit-scrollbar-track {
+            background: var(--dark-lighter);
+            border-radius: 3px;
+        }
+        
+        .endpoints-container::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        .endpoint-item {
+            background: var(--dark-lighter);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .endpoint-item:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+        
+        .endpoint-item.selected {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border-color: var(--primary);
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .method-GET { background: var(--success); color: white; }
+        .method-POST { background: var(--primary); color: white; }
+        .method-PUT { background: var(--warning); color: white; }
+        .method-DELETE { background: var(--error); color: white; }
+        .method-PATCH { background: var(--secondary); color: white; }
+        
+        .endpoint-path {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            color: var(--text);
+            margin-top: 4px;
+        }
+        
+        .endpoint-summary {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        
+        /* TEST RESULTS */
+        .test-results {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .test-results::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .test-results::-webkit-scrollbar-track {
+            background: var(--dark-lighter);
+            border-radius: 3px;
+        }
+        
+        .test-results::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        .test-case {
+            background: var(--dark-lighter);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        
+        .test-case:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        
+        .test-case.passed {
+            border-left: 3px solid var(--success);
+        }
+        
+        .test-case.failed {
+            border-left: 3px solid var(--error);
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .test-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        
+        .test-description {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .test-status {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .test-status.passed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .test-status.failed {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+        
+        .test-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .severity-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .severity-CRITICAL {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+        
+        .severity-HIGH {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .severity-MEDIUM {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+        
+        .severity-LOW {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .error-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+        }
+        
+        .error-text {
+            font-size: 12px;
+            color: #fca5a5;
+            line-height: 1.4;
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        /* LOADING */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+        }
+        
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            max-width: 400px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            transform: translateX(500px);
+            transition: transform 0.4s;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success { border-left: 3px solid var(--success); }
+        .notification.error { border-left: 3px solid var(--error); }
+        .notification.info { border-left: 3px solid var(--primary); }
+        
+        .notif-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .notification.success .notif-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .notification.error .notif-icon {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+        
+        .notification.info .notif-icon {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+        
+        .notif-content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .notif-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notif-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="notif-content">
+            <h4>Success</h4>
+            <p>Operation completed</p>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="logo-text">
+                <h1>SwaggerSense</h1>
+                <p>AI-Powered API Testing</p>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <div class="section-title">
+                <i class="fas fa-cog"></i>
+                Configuration
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">API Specification URL</label>
+                <input type="text" class="form-control" id="swaggerUrl"
+                       placeholder="https://api.example.com/v3/api-docs"
+                       value="http://localhost:8089/v3/api-docs">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Target Server URL</label>
+                <input type="text" class="form-control" id="baseUrl"
+                       placeholder="https://api.example.com"
+                       value="http://localhost:8089">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Authentication Token</label>
+                <input type="password" class="form-control" id="authToken"
+                       placeholder="Bearer token (optional)">
+            </div>
+            
+            <button class="btn btn-primary" onclick="fetchSwagger()">
+                <i class="fas fa-download"></i>
+                Load Specification
+            </button>
+        </div>
+        
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <div class="ai-badge" style="width: 100%; justify-content: center;">
+                <i class="fas fa-robot"></i>
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header-bar">
+            <div class="page-title">
+                <h2>API Testing Dashboard</h2>
+            </div>
+            <button class="btn btn-primary" style="width: auto;" onclick="generateAndRunTests()" id="runTestsBtn">
+                <i class="fas fa-play"></i>
+                Execute Tests
+            </button>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card endpoints">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                </div>
+                <div class="stat-label">Total Endpoints</div>
+                <div class="stat-value" id="statEndpoints">0</div>
+            </div>
+            
+            <div class="stat-card passed">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-label">Tests Passed</div>
+                <div class="stat-value" id="statPassed">0</div>
+            </div>
+            
+            <div class="stat-card failed">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-label">Tests Failed</div>
+                <div class="stat-value" id="statFailed">0</div>
+            </div>
+            
+            <div class="stat-card critical">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="stat-label">Security Issues</div>
+                <div class="stat-value" id="statCritical">0</div>
+            </div>
+        </div>
+        
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Endpoints Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-network-wired"></i>
+                        API Endpoints
+                    </div>
+                    <span class="badge" id="endpointCount">0</span>
+                </div>
+                
+                <div id="endpointList" class="endpoints-container">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3>No Endpoints</h3>
+                        <p>Load an API specification to begin</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Results Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-flask"></i>
+                        Test Results
+                    </div>
+                </div>
+                
+                <div id="testList" class="test-results">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>No Results Yet</h3>
+                        <p>Select an endpoint and run tests</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const BACKEND_URL = 'http://localhost:5000';
+        let endpoints = [];
+        let selectedEndpoint = null;
+        let testResults = [];
+        
+        function showNotification(title, message, type = 'success') {
+            const notif = document.getElementById('notification');
+            const icon = notif.querySelector('.notif-icon i');
+            
+            notif.querySelector('.notif-content h4').textContent = title;
+            notif.querySelector('.notif-content p').textContent = message;
+            notif.className = `notification ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+            icon.className = `fas ${icons[type] || 'fa-check'}`;
+            
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 4000);
+        }
+        
+        async function fetchSwagger() {
+            const swaggerUrl = document.getElementById('swaggerUrl').value.trim();
+            const authToken = document.getElementById('authToken').value.trim();
+            
+            if (!swaggerUrl) {
+                showNotification('Error', 'Please enter API specification URL', 'error');
+                return;
+            }
+            
+            const btn = document.querySelector('.sidebar .btn-primary');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/fetch-swagger`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ swaggerUrl, authToken })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    endpoints = data.endpoints;
+                    renderEndpoints();
+                    updateStats();
+                    showNotification('Success', `Loaded ${data.total_endpoints} endpoints`, 'success');
+                    
+                    if (endpoints.length > 0 && selectedEndpoint === null) {
+                        setTimeout(() => selectEndpoint(0), 100);
+                    }
+                } else {
+                    showNotification('Error', data.error || 'Failed to load specification', 'error');
+                }
+            } catch (error) {
+                showNotification('Error', `Connection failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        function renderEndpoints() {
+            const container = document.getElementById('endpointList');
+            const countBadge = document.getElementById('endpointCount');
+            countBadge.textContent = endpoints.length;
+            
+            if (endpoints.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3>No Endpoints</h3>
+                        <p>Load an API specification to begin</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = endpoints.map((ep, idx) => `
+                <div class="endpoint-item ${selectedEndpoint === idx ? 'selected' : ''}" 
+                     onclick="selectEndpoint(${idx})">
+                    <span class="endpoint-method method-${ep.method}">${ep.method}</span>
+                    <div class="endpoint-path">${ep.path}</div>
+                    ${ep.summary ? `<div class="endpoint-summary">${ep.summary}</div>` : ''}
+                </div>
+            `).join('');
+        }
+        
+        function selectEndpoint(idx) {
+            selectedEndpoint = idx;
+            renderEndpoints();
+            showNotification('Selected', `Ready to test: ${endpoints[idx].method} ${endpoints[idx].path}`, 'info');
+            testResults = [];
+            document.getElementById('testList').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Ready for Testing</h3>
+                    <p>Click "Execute Tests" to start</p>
+                </div>
+            `;
+            updateStats();
+        }
+        
+        async function generateAndRunTests() {
+            if (selectedEndpoint === null) {
+                showNotification('Error', 'Please select an endpoint first', 'error');
+                return;
+            }
+            
+            const baseUrl = document.getElementById('baseUrl').value.trim();
+            const authToken = document.getElementById('authToken').value.trim();
+            
+            if (!baseUrl) {
+                showNotification('Error', 'Please enter target server URL', 'error');
+                return;
+            }
+            
+            const endpoint = endpoints[selectedEndpoint];
+            const btn = document.getElementById('runTestsBtn');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            document.getElementById('testList').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>AI Analysis in Progress</h3>
+                    <p> SwaggerSense is generating test scenarios</p>
+                </div>
+            `;
+            
+            try {
+                const genResponse = await fetch(`${BACKEND_URL}/generate-tests`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ endpoint })
+                });
+                
+                const genData = await genResponse.json();
+                
+                if (!genData.success) {
+                    throw new Error(genData.error || 'Test generation failed');
+                }
+                
+                const testScenarios = genData.test_scenarios;
+                showNotification('Success', `Generated ${testScenarios.length} test scenarios`, 'success');
+                
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
+                document.getElementById('testList').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <h3>Executing Tests</h3>
+                        <p>Running ${testScenarios.length} test scenarios</p>
+                    </div>
+                `;
+                
+                const execResponse = await fetch(`${BACKEND_URL}/run-tests`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ baseUrl, authToken, testScenarios })
+                });
+                
+                const execData = await execResponse.json();
+                
+                if (execData.success) {
+                    testResults = execData.results;
+                    renderTestResults();
+                    updateStatsFromResults(execData.statistics);
+                    
+                    const stats = execData.statistics;
+                    const rate = Math.round((stats.passed / stats.total) * 100);
+                    
+                    if (stats.failed === 0) {
+                        showNotification('Perfect!', `All ${stats.total} tests passed`, 'success');
+                    } else {
+                        showNotification('Completed', `${stats.passed}/${stats.total} passed (${rate}%)`, 
+                            stats.critical_count > 0 ? 'error' : 'info');
+                    }
+                } else {
+                    throw new Error(execData.error || 'Test execution failed');
+                }
+                
+            } catch (error) {
+                showNotification('Error', error.message, 'error');
+                document.getElementById('testList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Test Failed</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        function renderTestResults() {
+            const container = document.getElementById('testList');
+            
+            if (testResults.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>No Results</h3>
+                        <p>Execute tests to view results</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = testResults.map(test => `
+                <div class="test-case ${test.passed ? 'passed' : 'failed'}">
+                    <div class="test-header">
+                        <div>
+                            <div class="test-name">${test.test_name}</div>
+                            <div class="test-description">${test.description}</div>
+                        </div>
+                        <span class="test-status ${test.passed ? 'passed' : 'failed'}">
+                            <i class="fas ${test.passed ? 'fa-check' : 'fa-times'}"></i>
+                            ${test.passed ? 'PASSED' : 'FAILED'}
+                        </span>
+                    </div>
+                    
+                    <div class="test-meta">
+                        <div class="meta-item">
+                            <span class="severity-badge severity-${test.severity}">${test.severity}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-cube"></i>
+                            ${test.method}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            ${test.response_time ? (test.response_time * 1000).toFixed(0) + 'ms' : 'N/A'}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-code"></i>
+                            HTTP ${test.actual_status || 'N/A'}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            ${test.category}
+                        </div>
+                    </div>
+                    
+                    ${test.error ? `
+                        <div class="error-box">
+                            <div class="error-text">${test.error}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        function updateStats() {
+            document.getElementById('statEndpoints').textContent = endpoints.length;
+        }
+        
+        function updateStatsFromResults(stats) {
+            document.getElementById('statEndpoints').textContent = endpoints.length;
+            document.getElementById('statPassed').textContent = stats.passed;
+            document.getElementById('statFailed').textContent = stats.failed;
+            document.getElementById('statCritical').textContent = stats.critical_count || 0;
+        }
+    </script>
+</body>
+</html>
