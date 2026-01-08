@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 
-GEMINI_API_KEY = "AIzaSyAaVgNCZPXkkdNZOHIVR03u-dgmJ0uAvcg"
+GEMINI_API_KEY = "api key "
 genai.configure(api_key=GEMINI_API_KEY)
 
 class AdaptiveAPITester:
