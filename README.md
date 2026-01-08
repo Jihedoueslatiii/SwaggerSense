@@ -1,4 +1,4 @@
-# 🚀 Nexus API Tester  
+# 🚀 SwaggeSsense  API Tester  
 AI-Powered API Scenario Generator & Testing UI
 
 Nexus API Tester is an MVP tool that lets you:
